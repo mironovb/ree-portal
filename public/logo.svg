@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs><style>
+    .s{fill:none;stroke:#228b94;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+  </style></defs>
+  <circle class="s" cx="48" cy="48" r="38"></circle>
+  <path class="s" d="M60 36 44 44 36 60 52 52 60 36z"></path>
+  <circle class="s" cx="48" cy="48" r="20"></circle>
+</svg>
