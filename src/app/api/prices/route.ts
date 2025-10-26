@@ -1,19 +1,16 @@
 import { NextResponse } from "next/server";
+import { supabaseServer } from "@/lib/supabase-server";
 
-const rows = [
-  { ts: "2025-07-01", product: "NdPr Oxide", region: "China FOB", price: 57.2 },
-  { ts: "2025-08-01", product: "NdPr Oxide", region: "China FOB", price: 58.8 },
-  { ts: "2025-09-01", product: "NdPr Oxide", region: "China FOB", price: 56.3 },
-  { ts: "2025-10-01", product: "NdPr Oxide", region: "China FOB", price: 59.1 },
-  {
-    ts: "2025-10-01",
-    product: "NdPr Oxide",
-    region: "EU CIF",
-    price: 62.4,
-    basis_vs_china: 3.3,
-  },
-];
+export const dynamic = "force-dynamic";
 
 export async function GET() {
-  return NextResponse.json({ rows });
+  const { data, error } = await supabaseServer
+    .from("prices")
+    .select("ts, product, region, price, basis_vs_china")
+    .order("ts", { ascending: true });
+
+  if (error) {
+    return NextResponse.json({ rows: [], error: error.message }, { status: 500 });
+  }
+  return NextResponse.json({ rows: data ?? [] });
 }

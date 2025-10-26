@@ -30,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <nav className="flex gap-6 text-sm">
                   <Link href="/" className="hover:underline">Home</Link>
                   <Link href="/dashboard" className="hover:underline">Dashboard</Link>
+                  <Link href="/rfq/new" className="hover:underline">RFQ</Link>
                 </nav>
                 <ThemeToggle />
               </div>
