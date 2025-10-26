@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-  if (!req.nextUrl.pathname.startsWith("/admin")) return;
+  const path = req.nextUrl.pathname;
+  if (!path.startsWith("/admin") && !path.startsWith("/api/admin")) return;
 
   const creds = process.env.ADMIN_BASIC_AUTH;
   if (!creds) return NextResponse.json({ error: "ADMIN_BASIC_AUTH not set" }, { status: 500 });
@@ -25,5 +26,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
 };

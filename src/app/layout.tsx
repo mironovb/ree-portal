@@ -1,8 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
-import ThemeToggle from "@/components/theme-toggle";
+import HeaderNav from "@/components/header-nav";
 
 export const metadata: Metadata = {
   title: "REE Portal",
@@ -26,14 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 />
                 <span className="text-sm text-muted-foreground">β</span>
               </div>
-              <div className="flex items-center gap-4">
-                <nav className="flex gap-6 text-sm">
-                  <Link href="/" className="hover:underline">Home</Link>
-                  <Link href="/dashboard" className="hover:underline">Dashboard</Link>
-                  <Link href="/rfq/new" className="hover:underline">RFQ</Link>
-                </nav>
-                <ThemeToggle />
-              </div>
+              <HeaderNav />
             </div>
           </header>
           <main className="mx-auto max-w-7xl px-4">{children}</main>

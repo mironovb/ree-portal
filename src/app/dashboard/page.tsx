@@ -2,6 +2,7 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import PricePanel from "./price-panel";
+import SpreadPanel from "./spread-panel";
 import CompliancePanel from "./compliance-panel";
 import MapPanel from "./map-panel";
 
@@ -12,13 +13,15 @@ export default function Dashboard() {
       <Tabs defaultValue="prices" className="space-y-6">
         <TabsList>
           <TabsTrigger value="prices">Prices</TabsTrigger>
+          <TabsTrigger value="spreads">Spreads</TabsTrigger>
           <TabsTrigger value="map">Policy Map</TabsTrigger>
           <TabsTrigger value="compliance">Compliance</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="prices"><PricePanel/></TabsContent>
-        <TabsContent value="map"><MapPanel/></TabsContent>
-        <TabsContent value="compliance"><CompliancePanel/></TabsContent>
+        <TabsContent value="prices"><PricePanel /></TabsContent>
+        <TabsContent value="spreads"><SpreadPanel /></TabsContent>
+        <TabsContent value="map"><MapPanel /></TabsContent>
+        <TabsContent value="compliance"><CompliancePanel /></TabsContent>
       </Tabs>
     </section>
   );
