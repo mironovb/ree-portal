@@ -3,12 +3,18 @@
 import { useState, useEffect } from "react";
 import useSWR from "swr";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import type { QuotePayload } from "./quote-form";
 
 const fetcher = (u:string)=>fetch(u).then(r=>r.json());
 
-export default function QuoteResults({ data }: { data: any }) {
+export default function QuoteResults({ data, input }: { data: any; input?: QuotePayload | null }) {
   const [quoteId, setQuoteId] = useState<string | null>(null);
-  useEffect(()=>{ if (data?.quoteId) setQuoteId(data.quoteId); }, [data]);
+  const [committing, setCommitting] = useState(false);
+  const [commitError, setCommitError] = useState<string | null>(null);
+  
+  useEffect(()=>{ 
+    if (data?.quoteId) setQuoteId(data.quoteId); 
+  }, [data]);
 
   // domestic price section
   const product = data?.product as string | undefined;
@@ -17,8 +23,29 @@ export default function QuoteResults({ data }: { data: any }) {
     fetcher
   );
 
-  // restrictions (export controls) already fetched on server; we show any non-tariff policies
-  const restrictions = (data?.policies || []).filter((p: any) => p.type === "export_control");
+  async function handleCommit() {
+    if (!input) return;
+    setCommitting(true);
+    setCommitError(null);
+    try {
+      const res = await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...input, commit: true }),
+      });
+      const json = await res.json();
+      if (res.ok && json?.quoteId) {
+        setQuoteId(json.quoteId);
+      } else {
+        setCommitError(json?.error || "Failed to save quote");
+      }
+    } catch (e) {
+      console.error("Failed to commit quote:", e);
+      setCommitError("Failed to save quote. Please try again.");
+    } finally {
+      setCommitting(false);
+    }
+  }
 
   return (
     <div className="grid gap-6 mt-6">
@@ -35,9 +62,25 @@ export default function QuoteResults({ data }: { data: any }) {
               </div>
               <div className="mt-2 text-lg font-medium">Estimated landed: ${data.best.landed_total_usd.toLocaleString()}</div>
             </div>
-            {quoteId && (
-              <a href={`/quote/${quoteId}`} className="rounded-md border border-border px-4 py-2 hover:bg-secondary text-sm">Open full route</a>
-            )}
+            <div className="flex flex-col gap-2">
+              {!quoteId && input && (
+                <>
+                  <button 
+                    onClick={handleCommit} 
+                    disabled={committing}
+                    className="rounded-md border border-border px-4 py-2 hover:bg-secondary text-sm whitespace-nowrap"
+                  >
+                    {committing ? "Saving..." : "Get full route + quote"}
+                  </button>
+                  {commitError && (
+                    <div className="text-xs text-red-400">{commitError}</div>
+                  )}
+                </>
+              )}
+              {quoteId && (
+                <a href={`/quote/${quoteId}`} className="rounded-md border border-border px-4 py-2 hover:bg-secondary text-sm whitespace-nowrap">Open full route</a>
+              )}
+            </div>
           </div>
           <div className="mt-3 grid md:grid-cols-5 gap-3 text-sm">
             {["cargo_value","freight","tariff_value","insurance","brokerage"].map((k) => (
