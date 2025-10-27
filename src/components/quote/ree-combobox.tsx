@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { COMMON_PRODUCTS, OXIDE_PRODUCTS, METAL_PRODUCTS, type ProductOption } from "@/data/ree-products";
+import { ALL_PRODUCTS, type ProductOption } from "@/data/ree-products";
+import { COMMON_PRODUCTS, OXIDE_PRODUCTS, METAL_PRODUCTS } from "@/data/ree-products";
 
 type Props = {
   value: string;
@@ -18,9 +19,8 @@ export default function REECombobox({ value, onChange, placeholder = "Select pro
     if (!searchTerm) return null;
     
     const term = searchTerm.toLowerCase();
-    const allProducts = [...COMMON_PRODUCTS, ...OXIDE_PRODUCTS, ...METAL_PRODUCTS];
     
-    return allProducts.filter(p => 
+    return ALL_PRODUCTS.filter(p => 
       p.label.toLowerCase().includes(term) ||
       p.value.toLowerCase().includes(term) ||
       p.synonyms?.some(s => s.toLowerCase().includes(term))
@@ -34,8 +34,7 @@ export default function REECombobox({ value, onChange, placeholder = "Select pro
   };
 
   const selectedProduct = useMemo(() => {
-    const allProducts = [...COMMON_PRODUCTS, ...OXIDE_PRODUCTS, ...METAL_PRODUCTS];
-    return allProducts.find(p => p.value === value);
+    return ALL_PRODUCTS.find(p => p.value === value);
   }, [value]);
 
   return (

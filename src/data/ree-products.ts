@@ -29,13 +29,13 @@ export const RARE_EARTH_ELEMENTS = [
 export const OXIDE_PRODUCTS = RARE_EARTH_ELEMENTS.map(el => ({
   value: `${el.name} Oxide`,
   label: `${el.name} Oxide`,
-  synonyms: [`${el.symbol} Oxide`, `${el.symbol}2O3`],
+  synonyms: [`${el.symbol} Oxide`],
 }));
 
 export const METAL_PRODUCTS = RARE_EARTH_ELEMENTS.map(el => ({
   value: `${el.name} Metal`,
   label: `${el.name} Metal`,
-  synonyms: [`${el.symbol} Metal`, `${el.symbol}`],
+  synonyms: [`${el.symbol} Metal`],
 }));
 
 export type ProductOption = {
