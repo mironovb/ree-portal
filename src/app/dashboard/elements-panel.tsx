@@ -3,6 +3,9 @@
 import { ElementGrid } from "@/components/element-grid";
 
 // Rare earth elements data
+// Note: Scandium (21) and Yttrium (39) are not lanthanides but are commonly
+// grouped with rare earth elements due to similar chemical properties and
+// commercial applications. This matches the original Elementor implementation.
 const ELEMENTS = [
   { symbol: "Ce", name: "Cerium", number: 58, href: "/elements/cerium" },
   { symbol: "Dy", name: "Dysprosium", number: 66, href: "/elements/dysprosium" },
