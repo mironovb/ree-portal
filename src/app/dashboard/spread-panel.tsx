@@ -2,13 +2,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from "recharts";
-import useSWR from "swr";
+import { useMemo } from "react";
 
-type Row = { ts: string; product: string; region: string; price: number };
+import { DUMMY_PRICE_SERIES } from "@/data/market-data";
 
-const fetcher = (url: string) => fetch(url).then(r => r.json());
-
-function computeBasis(rows: Row[]) {
+function computeBasis(rows: typeof DUMMY_PRICE_SERIES) {
   // map date -> { cn?: number, eu?: number }
   const map = new Map<string, { cn?: number; eu?: number }>();
   for (const r of rows.filter(r => r.product === "NdPr Oxide")) {
@@ -28,9 +26,8 @@ function computeBasis(rows: Row[]) {
 }
 
 export default function SpreadPanel() {
-  const { data } = useSWR<{ rows: Row[] }>("/api/prices", fetcher);
-  const rows = data?.rows ?? [];
-  const chart = computeBasis(rows);
+  const rows = useMemo(() => DUMMY_PRICE_SERIES, []);
+  const chart = useMemo(() => computeBasis(rows), [rows]);
 
   return (
     <Card>

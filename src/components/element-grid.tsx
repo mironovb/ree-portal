@@ -5,6 +5,8 @@ interface ElementItem {
   name: string;
   number: number;
   href: string;
+  headline?: string;
+  priceSummary?: string;
 }
 
 interface ElementGridProps {
@@ -21,6 +23,8 @@ export function ElementGrid({ items }: ElementGridProps) {
           name={item.name}
           number={item.number}
           href={item.href}
+          headline={item.headline}
+          priceSummary={item.priceSummary}
         />
       ))}
     </div>

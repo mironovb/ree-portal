@@ -27,6 +27,7 @@ export default function HeaderNav() {
       <nav className="flex gap-6 text-sm">
         <NavLink href="/">Home</NavLink>
         <NavLink href="/dashboard">Dashboard</NavLink>
+        <NavLink href="/prices">Price boards</NavLink>
         <NavLink href="/rfq/new">RFQ</NavLink>
       </nav>
       <ThemeToggle />
