@@ -5,9 +5,11 @@ interface ElementCardProps {
   name: string;
   number: number;
   href: string;
+  headline?: string;
+  priceSummary?: string;
 }
 
-export function ElementCard({ symbol, name, number, href }: ElementCardProps) {
+export function ElementCard({ symbol, name, number, href, headline, priceSummary }: ElementCardProps) {
   return (
     <Link
       href={href}
@@ -15,34 +17,26 @@ export function ElementCard({ symbol, name, number, href }: ElementCardProps) {
       aria-label={`${name} (${symbol}), atomic number ${number}`}
       prefetch={true}
     >
-      <div className="flex flex-col h-full">
-        {/* Top section: Symbol */}
-        <div className="flex-none mb-2">
-          <div className="inline-block">
-            <h5 className="text-3xl font-semibold text-foreground transition-colors">
-              {symbol}
-            </h5>
+      <div className="flex flex-col h-full gap-4">
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="text-sm text-muted-foreground">{number}</div>
+            <h5 className="text-3xl font-semibold text-foreground transition-colors">{symbol}</h5>
           </div>
-        </div>
-
-        {/* Middle section: Name */}
-        <div className="flex-grow">
-          <h4 className="text-lg font-medium text-muted-foreground transition-colors group-hover:text-foreground">
+          <span className="rounded-full border border-border px-3 py-1 text-xs uppercase tracking-wide text-muted-foreground group-hover:text-foreground">
             {name}
-          </h4>
+          </span>
         </div>
 
-        {/* Bottom section: CTA and Atomic Number */}
-        <div className="flex-none mt-4 relative">
-          <div className="text-sm text-muted-foreground underline underline-offset-4 transition-all group-hover:text-foreground group-hover:no-underline">
-            View product →
-          </div>
-          
-          {/* Atomic number in corner */}
-          <div className="absolute -bottom-5 -right-5 text-4xl font-bold text-muted-foreground/20 transition-colors group-hover:text-foreground/10">
-            {number}
-          </div>
-        </div>
+        {headline && (
+          <p className="text-base font-medium leading-snug text-foreground">{headline}</p>
+        )}
+
+        {priceSummary && (
+          <p className="text-sm text-muted-foreground">{priceSummary}</p>
+        )}
+
+        <div className="mt-auto text-sm font-medium text-primary group-hover:underline">View snapshot →</div>
       </div>
     </Link>
   );

@@ -2,15 +2,22 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
-import useSWR from "swr";
+import { useMemo } from "react";
 
-type Row = { ts: string; product: string; region: string; price: number; basis_vs_china?: number };
-const fetcher = (url: string) => fetch(url).then(r => r.json());
+import { DUMMY_PRICE_SERIES } from "@/data/market-data";
 
 export default function PricePanel() {
-  const { data } = useSWR<{ rows: Row[] }>("/api/prices", fetcher);
-  const rows = data?.rows ?? [];
-  const ndprChina = rows.filter(r => r.product === "NdPr Oxide" && r.region === "China FOB");
+  const rows = useMemo(() => DUMMY_PRICE_SERIES, []);
+  const ndprChina = useMemo(
+    () => rows.filter((r) => r.product === "NdPr Oxide" && r.region === "China FOB"),
+    [rows]
+  );
+  const latestRows = useMemo(() => {
+    return [...rows]
+      .sort((a, b) => a.ts.localeCompare(b.ts))
+      .slice(-6)
+      .reverse();
+  }, [rows]);
 
   return (
     <div className="grid md:grid-cols-5 gap-6">
@@ -33,13 +40,13 @@ export default function PricePanel() {
         <CardHeader><CardTitle>Latest prints</CardTitle></CardHeader>
         <CardContent>
           <div className="divide-y divide-border text-sm">
-            {rows.slice(-6).reverse().map((r, i) => (
+            {latestRows.map((r, i) => (
               <div key={i} className="py-2 flex justify-between">
                 <span>{r.ts} • {r.product} ({r.region})</span>
                 <span className="font-medium">${r.price.toFixed(2)}/kg</span>
               </div>
             ))}
-            {rows.length === 0 && <div className="py-2 text-muted-foreground">Loading…</div>}
+            {rows.length === 0 && <div className="py-2 text-muted-foreground">No data yet</div>}
           </div>
         </CardContent>
       </Card>
