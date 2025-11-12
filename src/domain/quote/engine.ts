@@ -1,6 +1,6 @@
 import { BROKERAGE_FLAT, INSURANCE_PCT, SERIES_POINTS } from "./config/constants";
 import { latestByRegion, isCIFIncluded, median } from "./helpers";
-import type { Destination, Lane, Policy, PriceRow, QuoteInput, QuoteResult, RouteOption } from "./types";
+import type { Lane, Policy, PriceRow, QuoteInput, QuoteResult, RouteOption } from "./types";
 
 export function computeQuote(params: {
   input: QuoteInput;

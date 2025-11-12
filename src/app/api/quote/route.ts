@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(result);
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message ?? "Quote error" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Quote error" }, { status: 500 });
   }
 }

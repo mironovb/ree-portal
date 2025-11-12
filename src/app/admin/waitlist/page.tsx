@@ -2,6 +2,13 @@ import { supabaseServer } from "@/lib/supabase-server";
 
 export const dynamic = "force-dynamic";
 
+type WaitlistRow = {
+  email: string;
+  company: string | null;
+  notes: string | null;
+  created_at: string;
+};
+
 export default async function AdminWaitlistPage() {
   const { data, error } = await supabaseServer
     .from("waitlist")
@@ -11,6 +18,8 @@ export default async function AdminWaitlistPage() {
   if (error) {
     return <pre className="p-6 text-red-400">Error: {error.message}</pre>;
   }
+
+  const rows = (data as WaitlistRow[]) ?? [];
 
   return (
     <section className="py-10">
@@ -26,7 +35,7 @@ export default async function AdminWaitlistPage() {
             </tr>
           </thead>
           <tbody>
-            {(data ?? []).map((r, i) => (
+            {rows.map((r, i) => (
               <tr key={i} className="border-t border-border">
                 <td className="p-3">{new Date(r.created_at).toLocaleString()}</td>
                 <td className="p-3">{r.email}</td>
