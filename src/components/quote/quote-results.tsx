@@ -24,16 +24,19 @@ export default function QuoteResults({ data, input }: { data: QuoteComputation; 
           </div>
 
           <div className="grid gap-3 md:grid-cols-5 text-sm">
-            {["cargo_value", "freight", "tariff_value", "insurance", "brokerage"].map((key) => (
-              <div key={key} className="rounded-md border border-border p-3">
-                <div className="text-muted-foreground uppercase tracking-wide text-xs">{key.replace("_", " ")}</div>
-                <div>
-                  {key === "tariff_value"
-                    ? `${data.best.breakdown.tariff_pct}% ($${data.best.breakdown.tariff_value.toLocaleString()})`
-                    : `$${data.best.breakdown[key as keyof typeof data.best.breakdown].toLocaleString()}`}
+            {(() => {
+              const breakdown = data.best.breakdown;
+              return ["cargo_value", "freight", "tariff_value", "insurance", "brokerage"].map((key) => (
+                <div key={key} className="rounded-md border border-border p-3">
+                  <div className="text-muted-foreground uppercase tracking-wide text-xs">{key.replace("_", " ")}</div>
+                  <div>
+                    {key === "tariff_value"
+                      ? `${breakdown.tariff_pct}% ($${breakdown.tariff_value.toLocaleString()})`
+                      : `$${breakdown[key as keyof typeof breakdown].toLocaleString()}`}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ));
+            })()}
           </div>
 
           {input && (

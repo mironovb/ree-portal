@@ -4,6 +4,15 @@ import { parse } from "csv-parse/sync";
 
 export const dynamic = "force-dynamic";
 
+type PriceRow = {
+  ts: string;
+  product: string;
+  region: string;
+  price: number;
+  basis_vs_china: number | null;
+  source: string;
+};
+
 export async function POST(req: Request) {
   try {
     const form = await req.formData();
@@ -13,14 +22,14 @@ export async function POST(req: Request) {
     }
 
     const text = await file.text();
-    const recs: any[] = parse(text, {
+    const recs: Record<string, unknown>[] = parse(text, {
       columns: true,
       skip_empty_lines: true,
       trim: true,
     });
 
     // validate + map
-    const rows = [];
+    const rows: PriceRow[] = [];
     for (const r of recs) {
       const ts = String(r.ts ?? "").trim();
       const product = String(r.product ?? "").trim();
@@ -48,7 +57,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ ok: true, upserted: rows.length, status });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message ?? "Upload error" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Upload error" }, { status: 500 });
   }
 }
