@@ -2,49 +2,35 @@
 
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
-import type { RouteBreakdown } from "@/domain/quote/types";
-
 import type { QuoteComputation, QuotePayload } from "./quote-form";
 
 export default function QuoteResults({ data, input }: { data: QuoteComputation; input?: QuotePayload | null }) {
-  const best = data.best;
   const tariffNotes = data.policies.filter((p) => p.type === "tariff");
   const controlNotes = data.policies.filter((p) => p.type === "export_control");
 
   return (
     <div className="grid gap-6 mt-6">
-      {best && (
+      {data.best && (
         <div className="rounded-lg border border-border p-5 space-y-4">
           <div className="flex flex-col gap-1">
             <h2 className="text-xl font-semibold">Best landed option</h2>
             <div className="text-sm text-muted-foreground">
-              {best.origin} → {best.destination} · Basis {best.basis_label}
+              {data.best.origin} → {data.best.destination} · Basis {data.best.basis_label}
             </div>
             <div className="text-sm text-muted-foreground">
-              ${best.unit_price_usd_per_kg.toFixed(2)}/kg · {best.quantity_kg} kg shipment
+              ${data.best.unit_price_usd_per_kg.toFixed(2)}/kg · {data.best.quantity_kg} kg shipment
             </div>
-            <div className="text-lg font-medium">Estimated landed: ${best.landed_total_usd.toLocaleString()}</div>
+            <div className="text-lg font-medium">Estimated landed: ${data.best.landed_total_usd.toLocaleString()}</div>
           </div>
 
           <div className="grid gap-3 md:grid-cols-5 text-sm">
-            {([
-              "cargo_value",
-              "freight",
-              "tariff_value",
-              "insurance",
-              "brokerage",
-            ] satisfies Array<keyof RouteBreakdown>).map((key) => {
-              const breakdown = best.breakdown;
-              const display = breakdown
-                ? key === "tariff_value"
-                  ? `${breakdown.tariff_pct}% ($${breakdown.tariff_value.toLocaleString()})`
-                  : `$${breakdown[key].toLocaleString()}`
-                : "—";
-
-              return (
-                <div key={key} className="rounded-md border border-border p-3">
-                  <div className="text-muted-foreground uppercase tracking-wide text-xs">{key.replace("_", " ")}</div>
-                  <div>{display}</div>
+            {["cargo_value", "freight", "tariff_value", "insurance", "brokerage"].map((key) => (
+              <div key={key} className="rounded-md border border-border p-3">
+                <div className="text-muted-foreground uppercase tracking-wide text-xs">{key.replace("_", " ")}</div>
+                <div>
+                  {key === "tariff_value"
+                    ? `${data.best.breakdown.tariff_pct}% ($${data.best.breakdown.tariff_value.toLocaleString()})`
+                    : `$${data.best.breakdown[key as keyof typeof data.best.breakdown].toLocaleString()}`}
                 </div>
               );
             })}
